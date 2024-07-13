@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Application Manager</title>
+</head>
+<body>
+    <h1>Job Application Manager</h1>
+    <form action="/add_job" method="post">
+        <label for="url">Job Posting URL:</label>
+        <input type="text" id="url" name="url">
+        <button type="submit">Add Job</button>
+    </form>
+    <form action="/view_jobs" method="get">
+        <button type="submit">View Jobs</button>
+    </form>
+</body>
+</html>

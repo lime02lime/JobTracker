@@ -8,36 +8,49 @@ client = OpenAI()
 
 def scrape_posting(url):
     response = requests.get(url)
-    soup = BeautifulSoup(response.text, 'html.parser')
+    
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.text, 'html.parser')
 
-    #Extract page title:
-    title = soup.title.get_text(strip=True)
+        #Extract page title:
+        title = soup.title.get_text(strip=True)
 
-    # Extract text from all <p> tags
-    paragraphs = [p.get_text(strip=True) for p in soup.find_all('p')]
+        #Extract page text:
+        body = soup.body
+        elements = []
+        if body:
+            for tag in body.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p'], recursive=True):
+                elements.append(tag.get_text(strip=True))
+        
+        #Combine title and text:
+        page_text = f"{title}\n\n" + "\n\n".join(elements)
+        #print(page_text)
 
-    # Combine the extracted information
-    page_text = f"{title}\n\n" + "\n\n".join(paragraphs)
-
-    # call return_info to sort through all the webpage text
-    info = return_info(page_text)
-
-    for key, value in info.items():
-        print(f"{key}: {value}")
-    return info
+        # call return_info to sort through all the webpage text
+        info = return_info(page_text)
+        info["URL"] = url
+        return info
+    
+    else:
+        print("Error reaching the website")
+        return None
 
 def return_info(page_text):
     #ask the GPT API to return the summary info
     completion = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": "You will be provided with the text from a job posting. Return the following details about the job: title, company, location (or region, if exact location not found), a summary of key responsibilities and job activities, a short summary of what the company does (not about their equal opportunities), start date or approximate period (such as year, season), application deadline (year/season/rolling if specific date not available), job posting date. If any of the information cannot be found in the text, respond with Not Found."},
-            {"role": "user", "content": f"Return the information requested with one item per line, in this format: 'Title:\\n(text). Company:\\n(text). Location:\\n(text). Responsibilities:\\n(text). Company Summary:\\n(text). Start Date:\\n(text). Deadline:\\n(text). Posting Date:\\n(text).' Here is the text: {page_text}"}
+            {"role": "system", "content": "You will be provided with the text from a job posting. Return the following details about the job: Title, Company, Location (or region, if exact location not found), Responsibilities, Company Summary (not about their equal opportunities), Start Date (such as year, season), Deadline (year/season/rolling if specific date not available), Posting Date. If any of the information cannot be found in the text, respond with Not Found."},
+            {"role": "system", "name":"example_user", "content": example_text1},
+            {"role": "system", "name": "example_assistant", "content": example_response1},
+            {"role": "system", "name":"example_user", "content": example_text2},
+            {"role": "system", "name": "example_assistant", "content": example_response2},
+            {"role": "user", "content": page_text}
         ]
     )
     #count the RESPONSE tokens, good to know:
-    token_count = completion.usage.prompt_tokens
-    print(token_count)
+    #token_count = completion.usage.prompt_tokens
+    #print(token_count)
 
     #extract the actual completion text
     response = completion.choices[0].message.content
@@ -48,37 +61,112 @@ def return_info(page_text):
     
 
 def create_dict(response):
-    #split the text by newlines
     lines = response.strip().split('\n')
-    #create the final dictionary
     job_details = {}
 
-    # Helper variables
-    current_key = None
-    current_value = []
-
-    # Iterate over the lines
     for line in lines:
-        # Check if the line ends with a colon, as all the titles do
-        if line.endswith(':'):
-            # If there's a current key being processed, save it to the dictionary
-            if current_key:
-                job_details[current_key] = ' '.join(current_value).strip()
-            # Set the new key and reset the value list
-            current_key = line[:-1].strip()  # Remove the colon
-            current_value = []
-        else:
-            # Accumulate the lines for the current key
-            current_value.append(line.strip())
-
-    # Add the last section to the dictionary
-    if current_key:
-        job_details[current_key] = ' '.join(current_value).strip()
+        # Split each line into key and value based on the first colon encountered
+        parts = line.split(':', 1)
+        if len(parts) == 2:
+            key = parts[0].strip()
+            value = parts[1].strip()
+            job_details[key] = value
 
     return job_details
 
 
+example_text1 = """
+2025 Full-Time Analyst Program - EMEA
+Region  
+EMEA
+Recruitment Year  
+2025
+Program  
+Analyst Program
+Job description  
+The Full-Time Analyst Programme is for candidates who will graduate with a bachelor’s or master’s degree between September 2024 and July 2025.
+
+Our Full-Time Analyst Programme is a two-year experience designed to empower and support Analysts in connecting their personal passions and strengths to BlackRock’s mission, principles and purpose. The programme begins with an orientation to learn about our purpose, business and strategic priorities – all while gaining insights into the day-to-day life of an Analyst at BlackRock.
+
+Following orientation, Analysts join their teams and stay connected with colleagues across the globe through ongoing training and professional development. This programme offers Analysts the chance to have a lasting impact on the firm and contribute to our greater collective purpose of helping more and more people experience financial well-being.
+
+Important:
+Candidates can apply for up to two functions within that programme (e.g., Investment Research and Analytics & Modeling). You must apply for both opportunities using the same programme application.
+
+If you withdraw your application, you cannot submit another application for this programme this year.
+
+Next steps:
+Once you submit your application, you will receive an email to complete a pre-interview assessment. You have up to five days to submit your pre-interview assessment; if you fail to do so, your application will be automatically withdrawn.
+
+We look forward to reviewing your application!
+
+BlackRock is proud to be an Equal Opportunity Employer. We evaluate qualified applicants without regard to age, disability, race, religion, sex, sexual orientation and other protected characteristics at law.
+
+Posted On:
+10/07/2024
+
+"""
+
+example_response1 = """
+Title: Full-Time Analyst Program.
+Company: BlackRock.
+Location: EMEA.
+Responsibilities: The program is a two-year experience to empower and support Analysts in connecting their personal passions and strengths to BlackRock’s mission, principles, and purpose. The program includes an orientation, joining teams, ongoing training, and professional development to contribute to BlackRock's collective purpose. Candidates can apply for up to two functions within the program.
+Company Summary: BlackRock is a global investment management corporation.
+Start Date: Not Found.
+Deadline: Not Found.
+Posting Date: 10 July 2024.
+"""
+
+example_text2 = """
+Graduate Software Engineer
+Computing, IT, Web Development, Systems, Software.
+What you’ll be doing:
+Create cutting edge software for our hardware and be involved in the entire lifecycle of a product, from design and development to integration. Work closely with both Electronic and Systems engineers, you'll enable the development of complex real-world systems that have to perform perfectly every time, as the consequences of failure could be catastrophic.
+
+What’s in it for you?
+Driven by a passion for developing world-class defence products; with ground-breaking technology, a collaborative culture and endless opportunities – you'll be part of a team building the future, today. Work-life balance is very important; you’ll get 25 days holiday, a flexible benefits package, a competitive pension scheme, cycle to work scheme and dedicated training to help you develop your career.
+
+You’ll be part of an inclusive, supportive team throughout your programme, and empowered to take your career in the direction that suits you.
+
+Location:
+Barrow-in-Furness (Cumbria), New Malden (London), Frimley (Surrey), Broad Oak (Hampshire), Warton (Lancashire) and Brough (Hull)
+
+Salary:
+Our starting salary is £34,000, plus a £2,000 welcome payment along with an optional 20% salary advance. Plus a flexible package of benefits to suit your lifestyle.
+
+Entry requirements?
+You’ll need a minimum 2:2 Bachelor’s degree in a subject related to your chosen area.
+
+Please note: some roles at BAE Systems are subject to security and export control restrictions and your nationality or place of birth may limit the roles you can undertake.
+
+What is the application process?
+The stages of our application process include: a short online application. If you’re successful, you'll then complete an online assessment with interactive activities, and an on-demand video interview. The next stage is competency-based interview, either virtual or face-to-face.
+
+Why a BAE Systems programme?
+We offer a non-rotational programme that gives you the choice of where you want to specialise - you’ll to deep-dive into your chosen field and develop your expertise, from day one.  You’ll also have the opportunity to pace your own development over 18-30 months, to suit your lifestyle.
+
+Deadline:
+Ongoing
+
+Start Date: January/April 2025
+"""
+
+example_response2 = """
+Title: Graduate Software Engineer.
+Company: BAE Systems.
+Location: Barrow-in-Furness (Cumbria), New Malden (London), Frimley (Surrey), Broad Oak (Hampshire), Warton (Lancashire) and Brough (Hull).
+Responsibilities: As a Graduate Software Engineer, you will develop cutting-edge software for hardware, participating in the product lifecycle from design to integration, and collaborate with Electronic and Systems engineers to ensure flawless performance in complex systems.
+Company Summary: BAE Systems is a global defense and aerospace company, specializing in advanced technology solutions for military and commercial customers.
+Start Date: January/April 2025.
+Deadline: Rolling.
+Posting Date: Not Found.
+"""
+
 #TEST CODE:
-#outputs = scrape_posting("https://blackrock.tal.net/vx/brand-3/spa-1/candidate/so/pm/1/pl/1/opp/8160-2025-Full-Time-Analyst-Program-EMEA/en-GB")
+#url1 = "https://careers.blackrock.com/job/20418142/analyst-associate-investment-product-strategy-multi-asset-strategies-solutions-budapest-hu/"
+#url2 = "https://blackrock.tal.net/vx/brand-3/spa-1/candidate/so/pm/1/pl/1/opp/8160-2025-Full-Time-Analyst-Program-EMEA/en-GB"
+#url3 = "https://boards.greenhouse.io/gaintheory/jobs/7427938002"
+#outputs = scrape_posting(url3)
 #for key, value in outputs.items():
 #    print(f"{key}: {value}")

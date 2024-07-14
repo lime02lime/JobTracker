@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from openai import OpenAI
 client = OpenAI()
 
-def scrape_posting(url):
+def scrape_url(url):
     response = requests.get(url)
     
     if response.status_code == 200:
@@ -34,6 +34,12 @@ def scrape_posting(url):
     else:
         print("Error reaching the website")
         return None
+
+def scrape_text(page_text, url):
+    print("Key Responsibilities" in page_text)
+    info = return_info(page_text)
+    info["URL"] = url
+    return info
 
 def return_info(page_text):
     #ask the GPT API to return the summary info

@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template
 import pandas as pd
 import sqlite3
-from scraper import scrape_posting
+from scraper import scrape_url, scrape_text
 
 app = Flask(__name__)
 
@@ -9,21 +9,27 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-@app.route('/add_job', methods=['POST'])
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB
+
+@app.route('/submit_url', methods=['POST'])
 def add_job():
     url = request.form['url']
+    page_text = request.form['page_text']
 
     if url_exists_in_db(url):
         return render_template('already_saved.html')
 
-    job_details = scrape_posting(url)
+    if len(page_text)==0: #if no additional text is submitted, scrape from the URL.
+        scraped_details = scrape_url(url)
+    else: #if text has been submitted, scrape only from the text.
+        scraped_details = scrape_text(page_text, url)
     
-    if job_details is not None:
+    if scraped_details is not None:
         conn = sqlite3.connect('jobs.db')
-        job_data = pd.DataFrame([job_details])
+        job_data = pd.DataFrame([scraped_details])
         job_data.to_sql('job_applications', conn, if_exists='append', index=False)
         
-        return render_template('success.html', job_details=job_details)
+        return render_template('success.html', job_details=scraped_details)
     
     else:
         return render_template('failure.html')

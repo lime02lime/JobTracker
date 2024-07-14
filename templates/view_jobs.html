@@ -4,14 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Jobs</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .narrow-column {
+            width: 150px; /* Adjust the width as needed */
+            word-break: break-all; /* Ensure long URLs break within the cell */
+        }
+    </style>
 </head>
 <body>
     <h1>Saved Job Postings</h1>
-    <ul>
-        {% for job in jobs %}
-        <li>{{ job['Title'] }} at {{ job['Company'] }}</li>
-        {% endfor %}
-    </ul>
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Company</th>
+                <th>Location</th>
+                <th>Responsibilities</th>
+                <th>Company Summary</th>
+                <th>Start Date</th>
+                <th>Deadline</th>
+                <th>Posting Date</th>
+                <th class="narrow-column">URL</th>
+                <!-- Add more headers as needed -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in jobs %}
+            <tr>
+                <td>{{ job['Title'] }}</td>
+                <td>{{ job['Company'] }}</td>
+                <td>{{ job['Location'] }}</td>
+                <td>{{ job['Responsibilities'] }}</td>
+                <td>{{ job['Company Summary'] }}</td>
+                <td>{{ job['Start Date'] }}</td>
+                <td>{{ job['Deadline'] }}</td>
+                <td>{{ job['Posting Date'] }}</td>
+                <td class="narrow-column">{{ job['URL'] }}</td>
+                <!-- Add more columns as needed -->
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
     <a href="/">Add more jobs</a>
 </body>
 </html>

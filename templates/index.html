@@ -7,9 +7,13 @@
 </head>
 <body>
     <h1>Job Application Manager</h1>
-    <form action="/add_job" method="post">
+    <form action="/submit_url" method="post">
         <label for="url">Job Posting URL:</label>
-        <input type="text" id="url" name="url">
+        <input type="text" id="url" name="url" maxlength="2048">
+        <br><br>
+        <label for="page_text">Page Text:</label>
+        <textarea id="page_text" name="page_text" rows="4" cols="50" maxlength="15000"></textarea>
+        <br><br>
         <button type="submit">Add Job</button>
     </form>
     <form action="/view_jobs" method="get">

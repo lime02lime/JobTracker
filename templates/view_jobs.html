@@ -49,11 +49,12 @@
                 <td>{{ job['Company'] }}</td>
                 <td>{{ job['Location'] }}</td>
                 <td>{{ job['Responsibilities'] }}</td>
-                <td>{{ job['Company Summary'] }}</td>
-                <td>{{ job['Start Date'] }}</td>
+                <td>{{ job['Company_Summary'] }}</td>
+                <td>{{ job['Start_Date'] }}</td>
                 <td>{{ job['Deadline'] }}</td>
-                <td>{{ job['Posting Date'] }}</td>
+                <td>{{ job['Posting_Date'] }}</td>
                 <td class="narrow-column">{{ job['URL'] }}</td>
+                <td><a href="/edit/{{ job['id'] }}">Edit</a></td>
                 <!-- Add more columns as needed -->
             </tr>
             {% endfor %}

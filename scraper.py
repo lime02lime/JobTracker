@@ -19,7 +19,7 @@ def scrape_url(url):
         body = soup.body
         elements = []
         if body:
-            for tag in body.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p'], recursive=True):
+            for tag in body.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'li'], recursive=True):
                 elements.append(tag.get_text(strip=True))
         
         #Combine title and text:
@@ -36,7 +36,6 @@ def scrape_url(url):
         return None
 
 def scrape_text(page_text, url):
-    print("Key Responsibilities" in page_text)
     info = return_info(page_text)
     info["URL"] = url
     return info
@@ -46,7 +45,7 @@ def return_info(page_text):
     completion = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": "You will be provided with the text from a job posting. Return the following details about the job: Title, Company, Location (or region, if exact location not found), Responsibilities, Company Summary (not about their equal opportunities), Start Date (such as year, season), Deadline (year/season/rolling if specific date not available), Posting Date. If any of the information cannot be found in the text, respond with Not Found."},
+            {"role": "system", "content": "You will be provided with the text from a job posting. Return the following details about the job: Title, Company, Location (or region, if exact location not found), Responsibilities, Company_Summary (not about their equal opportunities), Start_Date (such as year, season), Deadline (year/season/rolling if specific date not available), Posting_Date. If any of the information cannot be found in the text, respond with Not Found."},
             {"role": "system", "name":"example_user", "content": example_text1},
             {"role": "system", "name": "example_assistant", "content": example_response1},
             {"role": "system", "name":"example_user", "content": example_text2},
@@ -68,13 +67,16 @@ def return_info(page_text):
 
 def create_dict(response):
     lines = response.strip().split('\n')
-    job_details = {}
+    keys = ['Title', 'Company', 'Location', 'Responsibilities', 'Company_Summary', 'Start_Date', 'Deadline', 'Posting_Date', 'URL']
+    job_details = dict.fromkeys(keys)
 
     for line in lines:
         # Split each line into key and value based on the first colon encountered
         parts = line.split(':', 1)
         if len(parts) == 2:
             key = parts[0].strip()
+            if key not in job_details:
+                continue
             value = parts[1].strip()
             job_details[key] = value
 
@@ -118,10 +120,10 @@ Title: Full-Time Analyst Program.
 Company: BlackRock.
 Location: EMEA.
 Responsibilities: The program is a two-year experience to empower and support Analysts in connecting their personal passions and strengths to BlackRock’s mission, principles, and purpose. The program includes an orientation, joining teams, ongoing training, and professional development to contribute to BlackRock's collective purpose. Candidates can apply for up to two functions within the program.
-Company Summary: BlackRock is a global investment management corporation.
-Start Date: Not Found.
+Company_Summary: BlackRock is a global investment management corporation.
+Start_Date: Not Found.
 Deadline: Not Found.
-Posting Date: 10 July 2024.
+Posting_Date: 10 July 2024.
 """
 
 example_text2 = """
@@ -163,10 +165,10 @@ Title: Graduate Software Engineer.
 Company: BAE Systems.
 Location: Barrow-in-Furness (Cumbria), New Malden (London), Frimley (Surrey), Broad Oak (Hampshire), Warton (Lancashire) and Brough (Hull).
 Responsibilities: As a Graduate Software Engineer, you will develop cutting-edge software for hardware, participating in the product lifecycle from design to integration, and collaborate with Electronic and Systems engineers to ensure flawless performance in complex systems.
-Company Summary: BAE Systems is a global defense and aerospace company, specializing in advanced technology solutions for military and commercial customers.
-Start Date: January/April 2025.
+Company_Summary: BAE Systems is a global defense and aerospace company, specializing in advanced technology solutions for military and commercial customers.
+Start_Date: January/April 2025.
 Deadline: Rolling.
-Posting Date: Not Found.
+Posting_Date: Not Found.
 """
 
 #TEST CODE:

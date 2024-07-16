@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Job Posting</title>
+</head>
+<body>
+    <h1>Edit Job Posting</h1>
+    <p>{{ job['Title'] }} at {{ job['Company'] }}</p>
+    <form action="/edit/{{ job['id'] }}" method="post">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" value="{{ job['Title'] }}"><br><br>
+
+        <label for="company">Company:</label>
+        <input type="text" id="company" name="company" value="{{ job['Company'] }}"><br><br>
+
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="location" value="{{ job['Location'] }}"><br><br>
+
+        <label for="responsibilities">Responsibilities:</label>
+        <textarea id="responsibilities" name="responsibilities" rows="4" cols="50" maxlength="15000">{{ job['Responsibilities'] }}</textarea><br><br>
+
+        <label for="company_summary">Company Summary:</label>
+        <textarea id="company_summary" name="company_summary" rows="4" cols="50" maxlength="15000">{{ job['Company_Summary'] }}</textarea><br><br>
+
+        <label for="start_date">Start Date:</label>
+        <input type="text" id="start_date" name="start_date" value="{{ job['Start_Date'] }}"><br><br>
+
+        <label for="deadline">Deadline:</label>
+        <input type="text" id="deadline" name="deadline" value="{{ job['Deadline'] }}"><br><br>
+
+        <label for="posting_date">Posting Date:</label>
+        <input type="text" id="posting_date" name="posting_date" value="{{ job['Posting_Date'] }}"><br><br>
+
+        <label for="url">URL:</label>
+        <input type="text" id="url" name="url" value="{{ job['URL'] }}"><br><br>
+
+        <button type="submit">Update Job</button>
+    </form>
+    <br></br>
+    <a href="/view_jobs">Back to Jobs List</a>
+</body>
+</html>

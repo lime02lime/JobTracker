@@ -2,13 +2,20 @@
 import requests
 from bs4 import BeautifulSoup
 
-#GPT libraries
+#llm libraries
 from openai import OpenAI
-client = OpenAI()
+from groq import Groq
+
+import base64
+
+import os
+
+from screenshot import take_screenshot
 
 def scrape_url(url):
     response = requests.get(url)
-    
+    api = "groq"
+
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'html.parser')
 
@@ -17,6 +24,7 @@ def scrape_url(url):
 
         #Extract page text:
         body = soup.body
+
         elements = []
         if body:
             for tag in body.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'li'], recursive=True):
@@ -24,24 +32,42 @@ def scrape_url(url):
         
         #Combine title and text:
         page_text = f"{title}\n\n" + "\n\n".join(elements)
-        #print(page_text)
 
         # call return_info to sort through all the webpage text
-        info = return_info(page_text)
+        if api=="groq":
+            info = return_info_with_groq(page_text)
+        else:
+            info = return_info_with_gpt(page_text)
+
+        #check if no responsibilities were found. The length also checked in case the responsibilities happens to contain the words "none" or "not found"
+        if (not info["Responsibilities"]) or (len(info["Responsibilities"]) < 12):
+            #if ("None" in info["Responsibilities"] or "Not Found" in info["Responsibilities"]):
+            print("none, encountered")
+            take_screenshot(url, "page_screenshot.png")
+            image = encode_image("page_screenshot.png")
+            info = return_info_from_image(image)
+
         info["URL"] = url
         return info
     
     else:
-        print("Error reaching the website")
+        print("Error reaching the website, please submit the page text directly")
         return None
 
 def scrape_text(page_text, url):
-    info = return_info(page_text)
+    api = "groq"
+
+    if api=="groq":
+        info = return_info_with_groq(page_text)
+    else:
+        info = return_info_with_gpt(page_text)
+    
     info["URL"] = url
     return info
 
-def return_info(page_text):
+def return_info_with_gpt(page_text):
     #ask the GPT API to return the summary info
+    client = OpenAI()
     completion = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
@@ -63,7 +89,69 @@ def return_info(page_text):
     #call create_dict to create a dictionary with all the info, based on the structure requested from the API.
     info = create_dict(response)
     return info
-    
+
+def return_info_with_groq(page_text):
+    #ask the groq API to return the summary info
+    client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+    chat_completion = client.chat.completions.create(
+    messages=[
+            {"role": "system", "content": "You will be provided with the text from a job posting. Return the following details about the job: Title, Company, Location (or region, if exact location not found), Responsibilities, Company_Summary (not about their equal opportunities), Start_Date (such as year, season), Deadline (year/season/rolling if specific date not available), Posting_Date. If any of the information cannot be found in the text, respond with Not Found."},
+            {"role": "system", "name":"example_user", "content": example_text1},
+            {"role": "system", "name": "example_assistant", "content": example_response1},
+            {"role": "system", "name":"example_user", "content": example_text2},
+            {"role": "system", "name": "example_assistant", "content": example_response2},
+            {"role": "user", "content": page_text}
+    ],
+    model="llama3-8b-8192",
+    )
+
+    #extract the actual completion text
+    response = chat_completion.choices[0].message.content
+
+    #call create_dict to create a dictionary with all the info, based on the structure requested from the API.
+    info = create_dict(response)
+    return info
+
+def encode_image(image_path):
+  with open(image_path, "rb") as image_file:
+    return base64.b64encode(image_file.read()).decode('utf-8')
+  
+def return_info_from_image(image):
+    #ask the GPT API to return the summary info
+    client = OpenAI()
+
+    completion = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+        {"role": "system", "content": "You will be provided with an image containing the text from a job posting. Return the following details about the job: Title, Company, Location (or region, if exact location not found), Responsibilities, Company_Summary (not about their equal opportunities), Start_Date (such as year, season), Deadline (year/season/rolling if specific date not available), Posting_Date. If any of the information cannot be found in the text, respond with 'Not Found'."},
+        {"role": "system", "name":"example_user", "content": example_text1},
+        {"role": "system", "name": "example_assistant", "content": example_response1},
+        {"role": "system", "name":"example_user", "content": example_text2},
+        {"role": "system", "name": "example_assistant", "content": example_response2},
+        {"role": "user",
+        "content": [
+            {
+            "type": "text",
+            "text": "provide me the requested info for this photo."
+            },
+            {
+            "type": "image_url",
+            "image_url": {
+                "url": f"data:image/jpeg;base64,{image}"
+            }
+            }
+        ]
+        }
+    ]
+    )
+
+    #extract the actual completion text
+    response = completion.choices[0].message.content
+    print("4o-mini vision was used")
+
+    #call create_dict to create a dictionary with all the info, based on the structure requested from the API.
+    info = create_dict(response)
+    return info
 
 def create_dict(response):
     lines = response.strip().split('\n')
@@ -75,6 +163,7 @@ def create_dict(response):
         parts = line.split(':', 1)
         if len(parts) == 2:
             key = parts[0].strip()
+            key = key.replace('*', '')
             if key not in job_details:
                 continue
             value = parts[1].strip()

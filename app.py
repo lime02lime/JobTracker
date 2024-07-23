@@ -14,11 +14,11 @@ def index():
 @app.route('/submit_url', methods=['POST'])
 def add_job():
     url = request.form['url']
-    page_text = request.form['page_text']
 
     if url_exists_in_db(url):
         return render_template('already_saved.html')
 
+    page_text = request.form['page_text']
     if len(page_text)==0: #if no additional text is submitted, scrape from the URL.
         scraped_details = scrape_url(url)
     else: #if text has been submitted, scrape only from the text.

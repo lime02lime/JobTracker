@@ -15,7 +15,8 @@ def initialize_database():
         Start_Date TEXT,
         Deadline TEXT,
         Posting_Date TEXT,
-        URL TEXT
+        URL TEXT,
+        Embedding TEXT
     )
     ''')
     conn.commit()

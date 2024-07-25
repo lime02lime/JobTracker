@@ -23,10 +23,28 @@
             width: 150px; /* Adjust the width as needed */
             word-break: break-all; /* Ensure long URLs break within the cell */
         }
+        .delete-button {
+            color: red;
+            text-decoration: underline;
+            cursor: pointer;
+        }
     </style>
+    <script>
+        function confirmDelete(event) {
+            if (!confirm('Are you sure you want to delete this job?')) {
+                event.preventDefault(); // Prevent the link from being followed
+            }
+        }
+    </script>
 </head>
 <body>
     <h1>Saved Job Postings</h1>
+
+    <form action="/search_jobs" method="POST">
+        <input type="text" name="query" style="width: 300px;" placeholder="Search for company, location, etc..." required>
+        <button type="submit">Search</button>
+    </form>
+    <br></br>
     <table>
         <thead>
             <tr>
@@ -39,7 +57,7 @@
                 <th>Deadline</th>
                 <th>Posting Date</th>
                 <th class="narrow-column">URL</th>
-                <!-- Add more headers as needed -->
+                <th>Actions</th> <!-- Added header for actions column -->
             </tr>
         </thead>
         <tbody>
@@ -54,12 +72,18 @@
                 <td>{{ job['Deadline'] }}</td>
                 <td>{{ job['Posting_Date'] }}</td>
                 <td class="narrow-column">{{ job['URL'] }}</td>
-                <td><a href="/edit/{{ job['id'] }}">Edit</a></td>
-                <!-- Add more columns as needed -->
+                <td>
+                    <a href="/edit/{{ job['id'] }}">Edit</a> |
+                    <a href="/delete/{{ job['id'] }}" class="delete-button" onclick="confirmDelete(event)">Delete</a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    <br></br>
+    <form action="/view_jobs" method="get">
+        <button type="submit">Reload all Jobs</button>
+    </form>
     <a href="/">Add more jobs</a>
 </body>
 </html>

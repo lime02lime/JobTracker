@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Deletion Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            text-align: left;
+            padding: 20px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #ddd;
+            margin: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .narrow-column {
+            width: 150px; /* Adjust the width as needed */
+            word-break: break-all; /* Ensure long URLs break within the cell */
+        }
+        .summary {
+            min-width: 250px; /* Adjusted width for Company Summary column */
+            word-break: break-word;
+        }
+        .responsibilities {
+            min-width: 300px; /* Adjusted width for Responsibilities column */
+            word-break: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Job Deleted</h1>
+        <p>The job has been successfully deleted. Below are the details of the deleted job:</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Company</th>
+                    <th>Location</th>
+                    <th class="responsibilities">Responsibilities</th>
+                    <th class="summary">Company Summary</th>
+                    <th>Start Date</th>
+                    <th>Deadline</th>
+                    <th>Posting Date</th>
+                    <th class="narrow-column">URL</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ job['Title'] }}</td>
+                    <td>{{ job['Company'] }}</td>
+                    <td>{{ job['Location'] }}</td>
+                    <td class="responsibilities">{{ job['Responsibilities'] }}</td>
+                    <td class="summary">{{ job['Company_Summary'] }}</td>
+                    <td>{{ job['Start_Date'] }}</td>
+                    <td>{{ job['Deadline'] }}</td>
+                    <td>{{ job['Posting_Date'] }}</td>
+                    <td class="narrow-column">{{ job['URL'] }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <a href="/view_jobs">Back to Job Listings</a>
+    </div>
+</body>
+</html>

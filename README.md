@@ -1,5 +1,5 @@
-# app-manager
-Job Application Manager is a web application built using Flask to help users keep track of their job applications. The app uses the Groq API (or GPT, depending on preference) to extract the key information from a submitted job posting url. Users can then view the key information about the job postings in a table format, edit the details manually, or delete entries.
+# JobTracker
+JobTracker is a web application built using Flask to help users keep track of their job applications. The app uses the Groq API (or GPT, depending on preference) to extract the key information from a submitted job posting url. Users can then view the key information about the job postings in a table format, edit the details manually, or delete entries.
 
 Groq is an AI infrastructure company that claims to have the fastest AI inferencing. Their API is currently free to use and supposedly faster than the GPT API.
 

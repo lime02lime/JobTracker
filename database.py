@@ -16,6 +16,7 @@ def initialize_database():
         Deadline TEXT,
         Posting_Date TEXT,
         URL TEXT,
+        Notes TEXT,
         Embedding TEXT
     )
     ''')

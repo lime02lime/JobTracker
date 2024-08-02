@@ -15,6 +15,7 @@ def index():
 @app.route('/submit_url', methods=['POST'])
 def add_job():
     url = request.form['url']
+    notes = request.form['job_notes']
 
     if url_exists_in_db(url):
         return render_template('already_saved.html')
@@ -26,6 +27,7 @@ def add_job():
         scraped_details = scrape_text(page_text, url)
     
     if scraped_details is not None:
+        scraped_details['Notes'] = notes
         conn = sqlite3.connect('jobs.db')
         job_data = pd.DataFrame([scraped_details])
         job_data.to_sql('job_applications', conn, if_exists='append', index=False)
@@ -45,6 +47,7 @@ def regenerate():
     url = request.form['url']
     id = request.form['id']
     page_text = request.form['page_text']
+    notes = request.form['job_notes']
 
     if len(page_text)==0: #if no additional text is submitted, scrape from the URL.
         scraped_details = scrape_url(url)
@@ -52,6 +55,7 @@ def regenerate():
         scraped_details = scrape_text(page_text, url)
     
     if scraped_details is not None:
+        scraped_details['Notes'] = notes
         conn = sqlite3.connect('jobs.db')
         conn.execute('DELETE FROM job_applications WHERE id = ?', (id,))
         conn.commit()

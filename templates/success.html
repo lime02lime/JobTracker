@@ -74,6 +74,7 @@
                     <th>Deadline</th>
                     <th>Posting Date</th>
                     <th class="narrow-column">URL</th>
+                    <th>Notes</th>
                 </tr>
             </thead>
             <tbody>
@@ -87,6 +88,7 @@
                     <td>{{ job_details['Deadline'] }}</td>
                     <td>{{ job_details['Posting_Date'] }}</td>
                     <td class="narrow-column">{{ job_details['URL'] }}</td>
+                    <td>{{ job_details['Notes'] }}</td>
                 </tr>
             </tbody>
         </table>
@@ -95,6 +97,7 @@
             <input type="hidden" name="id" value="{{ id }}">
             <input type="hidden" name="url" value="{{ job_details['URL'] }}">
             <input type="hidden" name="page_text" value="{{ page_text }}">
+            <input type="hidden" name="job_notes" value="{{ job_details['Notes'] }}">
             <button type="submit">Regenerate Job Info</button>
         </form>
 

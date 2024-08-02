@@ -23,6 +23,10 @@
             width: 150px; /* Adjust the width as needed */
             word-break: break-all; /* Ensure long URLs break within the cell */
         }
+        .narrower-column {
+            width: 90px;
+            word-break: break-all;
+        }
         .delete-button {
             color: red;
             text-decoration: underline;
@@ -53,11 +57,12 @@
                 <th>Location</th>
                 <th>Responsibilities</th>
                 <th>Company Summary</th>
-                <th>Start Date</th>
-                <th>Deadline</th>
-                <th>Posting Date</th>
+                <th class="narrower-column">Start Date</th>
+                <th class="narrower-column">Deadline</th>
+                <th class="narrower-column">Posting Date</th>
                 <th class="narrow-column">URL</th>
-                <th>Actions</th> <!-- Added header for actions column -->
+                <th>Notes</th>
+                <th class="narrower-column">Actions</th> <!-- Added header for actions column -->
             </tr>
         </thead>
         <tbody>
@@ -68,11 +73,12 @@
                 <td>{{ job['Location'] }}</td>
                 <td>{{ job['Responsibilities'] }}</td>
                 <td>{{ job['Company_Summary'] }}</td>
-                <td>{{ job['Start_Date'] }}</td>
-                <td>{{ job['Deadline'] }}</td>
-                <td>{{ job['Posting_Date'] }}</td>
+                <td class="narrower-column">{{ job['Start_Date'] }}</td>
+                <td class="narrower-column">{{ job['Deadline'] }}</td>
+                <td class="narrower-column">{{ job['Posting_Date'] }}</td>
                 <td class="narrow-column">{{ job['URL'] }}</td>
-                <td>
+                <td>{{ job['Notes'] }}</td>
+                <td class="narrower-column">
                     <a href="/edit/{{ job['id'] }}">Edit</a> |
                     <a href="/delete/{{ job['id'] }}" class="delete-button" onclick="confirmDelete(event)">Delete</a>
                 </td>

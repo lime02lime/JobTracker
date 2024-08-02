@@ -5,8 +5,6 @@ from selenium.webdriver.edge.options import Options as EdgeOptions
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-#for photo compression:
-import base64
 #openai:
 from openai import OpenAI
 
@@ -46,9 +44,3 @@ def take_screenshot(url, screenshot_path):
 
     finally:
         driver.quit()
-
-# Example usage
-#url = "http://example.com"
-#url = "https://www.gradcracker.com/hub/1290/gain-theory/graduate-job/61350/analysts"
-#screenshot_path = "page_screenshot.png"
-#take_screenshot(url, screenshot_path)

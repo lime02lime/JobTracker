@@ -32,6 +32,37 @@
             text-decoration: underline;
             cursor: pointer;
         }
+
+        .applied {
+            background-color: #d4edda; /* Light green */
+        }
+        .assessments {
+            background-color: #ffeeba; /* Light orange */
+        }
+        .offer {
+            background-color: #cce5ff; /* Light blue */
+        }
+        .rejected {
+            background-color: #f8d7da; /* Light red */
+        }
+        .not_applied {
+            background-color: #ffffff; /* White */
+        }
+
+        .legend {
+            margin-bottom: 20px;
+        }
+        .legend-item {
+            margin-bottom: 5px;
+        }
+        .legend-color {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+            margin-right: 10px;
+            border: 1px solid #000;
+        }
     </style>
     <script>
         function confirmDelete(event) {
@@ -43,6 +74,26 @@
 </head>
 <body>
     <h1>Saved Job Postings</h1>
+
+    <!-- Legend Section -->
+    <div class="legend">
+        <h2>Legend</h2>
+        <div class="legend-item">
+            <span class="legend-color" style="background-color: #d4edda;"></span> Applied
+        </div>
+        <div class="legend-item">
+            <span class="legend-color" style="background-color: #ffeeba;"></span> Assessments
+        </div>
+        <div class="legend-item">
+            <span class="legend-color" style="background-color: #cce5ff;"></span> Offer
+        </div>
+        <div class="legend-item">
+            <span class="legend-color" style="background-color: #f8d7da;"></span> Rejected
+        </div>
+        <div class="legend-item">
+            <span class="legend-color" style="background-color: #ffffff;"></span> Not Applied
+        </div>
+    </div>
 
     <form action="/search_jobs" method="POST">
         <input type="text" name="query" style="width: 300px;" placeholder="Search for company, location, etc..." required>
@@ -67,7 +118,7 @@
         </thead>
         <tbody>
             {% for job in jobs %}
-            <tr>
+            <tr class="{{ job['Status']|lower }}">
                 <td>{{ job['Title'] }}</td>
                 <td>{{ job['Company'] }}</td>
                 <td>{{ job['Location'] }}</td>

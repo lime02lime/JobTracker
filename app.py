@@ -12,10 +12,13 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+
+
 @app.route('/submit_url', methods=['POST'])
 def add_job():
     url = request.form['url']
     notes = request.form['job_notes']
+    status = request.form['job_status']
 
     if url_exists_in_db(url):
         return render_template('already_saved.html')
@@ -28,6 +31,7 @@ def add_job():
     
     if scraped_details is not None:
         scraped_details['Notes'] = notes
+        scraped_details['Status'] = status
         conn = sqlite3.connect('jobs.db')
         job_data = pd.DataFrame([scraped_details])
         job_data.to_sql('job_applications', conn, if_exists='append', index=False)
@@ -42,12 +46,15 @@ def add_job():
     else:
         return render_template('failure.html')
     
+
+
 @app.route('/regenerate', methods=["GET", "POST"])
 def regenerate():
     url = request.form['url']
     id = request.form['id']
     page_text = request.form['page_text']
     notes = request.form['job_notes']
+    status = request.form['job_status']
 
     if len(page_text)==0: #if no additional text is submitted, scrape from the URL.
         scraped_details = scrape_url(url)
@@ -56,6 +63,7 @@ def regenerate():
     
     if scraped_details is not None:
         scraped_details['Notes'] = notes
+        scraped_details['Status'] = status
         conn = sqlite3.connect('jobs.db')
         conn.execute('DELETE FROM job_applications WHERE id = ?', (id,))
         conn.commit()
@@ -69,6 +77,8 @@ def regenerate():
         return render_template('success.html', job_details=scraped_details, page_text=page_text, id=id)
     else:
         return render_template('failure.html')
+
+
 
 @app.route('/view_jobs')
 def view_jobs():
@@ -90,7 +100,6 @@ def search_jobs():
 
 
 
-
 @app.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit(id):
     conn = sqlite3.connect('jobs.db')
@@ -107,13 +116,15 @@ def edit(id):
         deadline = request.form['deadline']
         posting_date = request.form['posting_date']
         url = request.form['url']
+        notes = request.form['job_notes']
+        status = request.form['job_status']
 
         conn.execute('''
             UPDATE job_applications
             SET Title = ?, Company = ?, Location = ?, Responsibilities = ?, 
-                Company_Summary = ?, Start_Date = ?, Deadline = ?, Posting_Date = ?, URL = ?
+                Company_Summary = ?, Start_Date = ?, Deadline = ?, Posting_Date = ?, URL = ?, Notes = ?, Status = ?
             WHERE id = ?
-        ''', (title, company, location, responsibilities, company_summary, start_date, deadline, posting_date, url, id))
+        ''', (title, company, location, responsibilities, company_summary, start_date, deadline, posting_date, url, notes, status, id))
         conn.commit()
         conn.close()
 
@@ -122,6 +133,7 @@ def edit(id):
     job_dict = dict(job) #convert to dict so that when we load the edit page, we can pre-fill the text boxes with the existing entries.
     conn.close()
     return render_template('edit_job.html', job=job_dict)
+
 
 
 @app.route('/delete/<int:id>', methods=['GET', 'POST'])
@@ -145,10 +157,14 @@ def delete(id):
     # Redirect to the confirmation page with the job ID
     return render_template('deletion.html', job=job_dict)
 
+
+
 @app.route('/export_jobs')
 def export_jobs():
     export_excel()
     return render_template('jobs_exported.html')
+
+
 
 if __name__ == '__main__':
     initialize_database()

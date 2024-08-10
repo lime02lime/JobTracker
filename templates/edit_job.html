@@ -39,6 +39,24 @@
         <label for="job_notes">Job notes:</label>
         <input type="text" id="job_notes" name="job_notes" value="{{ job['Notes'] }}"><br><br>
 
+        <label for="job_status">Current application status:</label>
+        <br>
+        <input type="radio" id="applied" name="job_status" value="applied" {% if job['Status'] == 'applied' %}checked{% endif %}>
+        <label for="applied">Applied</label>
+        <br>
+        <input type="radio" id="not_applied" name="job_status" value="not_applied" {% if job['Status'] == 'not_applied' %}checked{% endif %}>
+        <label for="not_applied">Not yet applied</label>
+        <br>
+        <input type="radio" id="assessments" name="job_status" value="assessments" {% if job['Status'] == 'assessments' %}checked{% endif %}>
+        <label for="assessments">Assessments to do</label>
+        <br>
+        <input type="radio" id="offer" name="job_status" value="offer" {% if job['Status'] == 'offer' %}checked{% endif %}>
+        <label for="offer">Offer received</label>
+        <br>
+        <input type="radio" id="rejected" name="job_status" value="rejected" {% if job['Status'] == 'rejected' %}checked{% endif %}>
+        <label for="rejected">Rejected</label>
+        <br><br>
+
         <button type="submit">Update Job</button>
     </form>
     <br></br>

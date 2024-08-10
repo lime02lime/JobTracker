@@ -17,7 +17,8 @@ def initialize_database():
         Posting_Date TEXT,
         URL TEXT,
         Notes TEXT,
-        Embedding TEXT
+        Embedding TEXT,
+        Status TEXT
     )
     ''')
     conn.commit()

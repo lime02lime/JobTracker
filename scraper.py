@@ -71,7 +71,7 @@ def return_info_with_gpt(page_text):
     completion = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": "You will be provided with the text from a job posting. Return the following details about the job: Title, Company, Location (or region, if exact location not found), Responsibilities, Company_Summary (not about their equal opportunities), Start_Date (such as year, season), Deadline (year/season/rolling if specific date not available), Posting_Date. If any of the information cannot be found in the text, respond with Not Found."},
+            {"role": "system", "content": "You will be provided with the text from a job posting. Return the following details about the job: Title, Company, Location (or region, if exact location not found), Responsibilities, Company_Summary (not about their equal opportunities), Start_Date (such as year, season), Deadline (year/season/rolling if specific date not available), Posting_Date. If any of the information cannot be found in the text, respond with 'Not Found.'."},
             {"role": "system", "name":"example_user", "content": example_text1},
             {"role": "system", "name": "example_assistant", "content": example_response1},
             {"role": "system", "name":"example_user", "content": example_text2},
@@ -95,7 +95,7 @@ def return_info_with_groq(page_text):
     client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
     chat_completion = client.chat.completions.create(
     messages=[
-            {"role": "system", "content": "You will be provided with the text from a job posting. Return the following details about the job: Title, Company, Location (or region, if exact location not found), Responsibilities, Company_Summary (not about their equal opportunities), Start_Date (such as year, season), Deadline (year/season/rolling if specific date not available), Posting_Date. If any of the information cannot be found in the text, respond with Not Found."},
+            {"role": "system", "content": "You will be provided with the text from a job posting. Return the following details about the job: Title, Company, Location (or region, if exact location not found), Responsibilities, Company_Summary (not about their equal opportunities), Start_Date (such as year, season), Deadline (year/season/rolling if specific date not available), Posting_Date. If any of the information cannot be found in the text, respond with 'Not Found.'."},
             {"role": "system", "name":"example_user", "content": example_text1},
             {"role": "system", "name": "example_assistant", "content": example_response1},
             {"role": "system", "name":"example_user", "content": example_text2},
@@ -123,7 +123,7 @@ def return_info_from_image(image):
     completion = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
-        {"role": "system", "content": "You will be provided with an image containing the text from a job posting. Return the following details about the job: Title, Company, Location (or region, if exact location not found), Responsibilities, Company_Summary (not about their equal opportunities), Start_Date (such as year, season), Deadline (year/season/rolling if specific date not available), Posting_Date. If any of the information cannot be found in the text, respond with 'Not Found'."},
+        {"role": "system", "content": "You will be provided with an image containing the text from a job posting. Return the following details about the job: Title, Company, Location (or region, if exact location not found), Responsibilities, Company_Summary (not about their equal opportunities), Start_Date (such as year, season), Deadline (year/season/rolling if specific date not available), Posting_Date. If any of the information cannot be found in the text, respond with 'Not Found.'."},
         {"role": "system", "name":"example_user", "content": example_text1},
         {"role": "system", "name": "example_assistant", "content": example_response1},
         {"role": "system", "name":"example_user", "content": example_text2},

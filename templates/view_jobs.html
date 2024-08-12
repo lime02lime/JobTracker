@@ -4,57 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Jobs</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            padding: 20px;
         }
-        table, th, td {
-            border: 1px solid black;
+        h1 {
+            color: #007bff;
+            margin-bottom: 30px;
         }
-        th, td {
-            padding: 8px;
-            text-align: left;
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        th {
-            background-color: #f2f2f2;
-        }
-        .narrow-column {
-            width: 150px; /* Adjust the width as needed */
-            word-break: break-all; /* Ensure long URLs break within the cell */
-        }
-        .narrower-column {
-            width: 90px;
-            word-break: break-all;
-        }
-        .delete-button {
-            color: red;
-            text-decoration: underline;
-            cursor: pointer;
-        }
-
-        .applied {
-            background-color: #d4edda; /* Light green */
-        }
-        .assessments {
-            background-color: #ffeeba; /* Light orange */
-        }
-        .offer {
-            background-color: #cce5ff; /* Light blue */
-        }
-        .rejected {
-            background-color: #f8d7da; /* Light red */
-        }
-        .not_applied {
-            background-color: #ffffff; /* White */
-        }
-
         .legend {
-            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap; /* Allows items to wrap to the next line if needed */
+            gap: 15px; /* Space between items */
+            margin-bottom: 30px;
         }
+
         .legend-item {
-            margin-bottom: 5px;
+            display: flex;
+            align-items: center; /* Centers items vertically */
+            margin-bottom: 0; /* Remove extra bottom margin */
         }
+
         .legend-color {
             display: inline-block;
             width: 20px;
@@ -63,84 +45,199 @@
             margin-right: 10px;
             border: 1px solid #000;
         }
+        .applied {
+            background-color: #d4edda;
+        }
+
+        .assessments {
+            background-color: #ffeeba;
+        }
+
+        .offer {
+            background-color: #cce5ff;
+        }
+
+        .rejected {
+            background-color: #f8d7da;
+        }
+
+        .not_applied {
+            background-color: #ffffff;
+        }
+        .action-link {
+            color: #007bff;
+            text-decoration: none;
+            margin: 2px 0;
+            display: block;
+        }
+        .action-link:hover {
+            text-decoration: underline;
+        }
+        .delete-link {
+            color: #dc3545;
+            text-decoration: none;
+            margin: 2px 0;
+            display: block;
+        }
+        .delete-link:hover {
+            text-decoration: underline;
+        }
+        .btn-custom {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 0.875rem;
+            text-align: center;
+            display: inline-block;
+            margin: 2px 0;
+        }
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+        .action-button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .form-inline input.form-control {
+            width: 350px !important; /* Force the width */
+            margin-right: 10px;
+        }
+        .table {
+            table-layout: auto; /* Adjust columns based on content */
+        }
+        .table td, .table th {
+            padding: 12px;
+            border: 1px solid #404040 !important;
+            word-break: break-word; /* Ensure text wraps within the cell */
+        }
+        .table th {
+            background-color: #f2f2f2;
+        }
+
+        /* Define column types */
+        .col-type-1 {
+            min-width: 110px;
+            max-width: 150px;
+        }
+
+        .col-type-2 {
+            min-width: 200px;
+            max-width: 300px;
+        }
+
+        .col-type-3 {
+            min-width: 350px;
+            max-width: 500px;
+        }
+
+        .table-responsive {
+            overflow-x: auto; /* Allow horizontal scrolling if needed */
+        }
+        .mt-4 {
+            margin-top: 1.5rem;
+        }
+        .ml-2 {
+            margin-left: .5rem;
+        }
     </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Saved Job Postings</h1>
+
+        <!-- Legend Section -->
+        <div class="legend">
+            <div class="legend-item">
+                <span class="legend-color" style="background-color: #d4edda;"></span> Applied
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background-color: #ffeeba;"></span> Assessments
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background-color: #cce5ff;"></span> Offer
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background-color: #f8d7da;"></span> Rejected
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background-color: #ffffff;"></span> Not Applied
+            </div>
+        </div>
+
+        <!-- Search Form -->
+        <form action="/search_jobs" method="POST" class="form-inline mb-4">
+            <input type="text" name="query" class="form-control" placeholder="Search for company, location, etc..." required>
+            <button type="submit" class="btn btn-custom">Search</button>
+        </form>
+
+        <div class="mt-4">
+            <form action="/view_jobs" method="get" class="d-inline">
+                <button type="submit" class="btn btn-custom">Reload all Jobs</button>
+            </form>
+            <a href="/" class="btn btn-custom ml-2">Add more jobs</a>
+        </div>
+
+        <br>
+
+        <!-- Job Postings Table -->
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="col-type-1">Title</th>
+                        <th class="col-type-1">Company</th>
+                        <th class="col-type-1">Location</th>
+                        <th class="col-type-3">Responsibilities</th>
+                        <th class="col-type-3">Company Summary</th>
+                        <th class="col-type-1">Start Date</th>
+                        <th class="col-type-1">Deadline</th>
+                        <th class="col-type-1">Posting Date</th>
+                        <th class="col-type-1">Notes</th>
+                        <th class="col-type-2">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for job in jobs %}
+                    <tr class="{{ job['Status']|lower }}">
+                        <td class="col-type-1">{{ job['Title'] }}</td>
+                        <td class="col-type-1">{{ job['Company'] }}</td>
+                        <td class="col-type-1">{{ job['Location'] }}</td>
+                        <td class="col-type-3">{{ job['Responsibilities'] }}</td>
+                        <td class="col-type-3">{{ job['Company_Summary'] }}</td>
+                        <td class="col-type-1">{{ job['Start_Date'] }}</td>
+                        <td class="col-type-1">{{ job['Deadline'] }}</td>
+                        <td class="col-type-1">{{ job['Posting_Date'] }}</td>
+                        <td class="col-type-1">{{ job['Notes'] }}</td>
+                        <td class="col-type-2">
+                            <div class="action-button-group">
+                                <a href="{{ job['URL'] }}" target="_blank" class="action-link">Open URL</a>
+                                <a href="/edit/{{ job['id'] }}" class="action-link">Edit</a>
+                                <a href="/delete/{{ job['id'] }}" class="delete-link" onclick="confirmDelete(event)">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Buttons for Actions -->
+        <div class="mt-4">
+            <form action="/view_jobs" method="get" class="d-inline">
+                <button type="submit" class="btn btn-custom">Reload all Jobs</button>
+            </form>
+            <a href="/" class="btn btn-custom ml-2">Add more jobs</a>
+        </div>
+    </div>
+
     <script>
-        function confirmDelete(event) {
+        function confirmDelete(event, id) {
             if (!confirm('Are you sure you want to delete this job?')) {
                 event.preventDefault(); // Prevent the link from being followed
             }
         }
     </script>
-</head>
-<body>
-    <h1>Saved Job Postings</h1>
-
-    <!-- Legend Section -->
-    <div class="legend">
-        <h2>Legend</h2>
-        <div class="legend-item">
-            <span class="legend-color" style="background-color: #d4edda;"></span> Applied
-        </div>
-        <div class="legend-item">
-            <span class="legend-color" style="background-color: #ffeeba;"></span> Assessments
-        </div>
-        <div class="legend-item">
-            <span class="legend-color" style="background-color: #cce5ff;"></span> Offer
-        </div>
-        <div class="legend-item">
-            <span class="legend-color" style="background-color: #f8d7da;"></span> Rejected
-        </div>
-        <div class="legend-item">
-            <span class="legend-color" style="background-color: #ffffff;"></span> Not Applied
-        </div>
-    </div>
-
-    <form action="/search_jobs" method="POST">
-        <input type="text" name="query" style="width: 300px;" placeholder="Search for company, location, etc..." required>
-        <button type="submit">Search</button>
-    </form>
-    <br></br>
-    <table>
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Company</th>
-                <th>Location</th>
-                <th>Responsibilities</th>
-                <th>Company Summary</th>
-                <th class="narrower-column">Start Date</th>
-                <th class="narrower-column">Deadline</th>
-                <th class="narrower-column">Posting Date</th>
-                <th class="narrow-column">URL</th>
-                <th>Notes</th>
-                <th class="narrower-column">Actions</th> <!-- Added header for actions column -->
-            </tr>
-        </thead>
-        <tbody>
-            {% for job in jobs %}
-            <tr class="{{ job['Status']|lower }}">
-                <td>{{ job['Title'] }}</td>
-                <td>{{ job['Company'] }}</td>
-                <td>{{ job['Location'] }}</td>
-                <td>{{ job['Responsibilities'] }}</td>
-                <td>{{ job['Company_Summary'] }}</td>
-                <td class="narrower-column">{{ job['Start_Date'] }}</td>
-                <td class="narrower-column">{{ job['Deadline'] }}</td>
-                <td class="narrower-column">{{ job['Posting_Date'] }}</td>
-                <td class="narrow-column">{{ job['URL'] }}</td>
-                <td>{{ job['Notes'] }}</td>
-                <td class="narrower-column">
-                    <a href="/edit/{{ job['id'] }}">Edit</a> |
-                    <a href="/delete/{{ job['id'] }}" class="delete-button" onclick="confirmDelete(event)">Delete</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <br></br>
-    <form action="/view_jobs" method="get">
-        <button type="submit">Reload all Jobs</button>
-    </form>
-    <a href="/">Add more jobs</a>
 </body>
 </html>

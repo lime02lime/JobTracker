@@ -4,46 +4,104 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Application Manager</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            padding: 20px;
+        }
+        h1 {
+            color: #007bff;
+            margin-bottom: 30px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .form-group textarea {
+            width: 100%;
+        }
+        .btn-custom {
+            background-color: #007bff;
+            color: white;
+            border: none;
+        }
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+        .radio-group {
+            margin-bottom: 20px;
+        }
+        .radio-group label {
+            margin-right: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h1>JobTrackr - Job Application Manager</h1>
-    <form action="/submit_url" method="post">
-        <label for="url">Job posting URL:</label>
-        <input type="text" id="url" name="url" maxlength="2048">
-        <br><br>
-        <label for="page_text">Web page text:</label>
-        <textarea id="page_text" name="page_text" rows="4" cols="50" maxlength="15000"></textarea>
-        <br><br>
-        <label for="job_notes">Add notes:</label>
-        <textarea id="job_notes" name="job_notes" rows="4" cols="50" maxlength="1500"></textarea>
-        <br><br>
+    <div class="container">
+        <h1>JobTrackr - Job Application Manager</h1>
+        
+        <form action="/submit_url" method="post">
+            <div class="form-group">
+                <label for="url">Job posting URL:</label>
+                <input type="text" id="url" name="url" maxlength="2048" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="page_text">Web page text:</label>
+                <textarea id="page_text" name="page_text" rows="4" maxlength="15000" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="job_notes">Add notes:</label>
+                <textarea id="job_notes" name="job_notes" rows="4" maxlength="1500" class="form-control"></textarea>
+            </div>
+            <div class="form-group radio-group">
+                <label>Current application status:</label>
+                <br>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="applied" name="job_status" value="applied">
+                    <label class="form-check-label" for="applied">Applied</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="not_applied" name="job_status" value="not_applied">
+                    <label class="form-check-label" for="not_applied">Not yet applied</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="assessments" name="job_status" value="assessments">
+                    <label class="form-check-label" for="assessments">Assessments to do</label>
+                </div>
+                <br>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="offer" name="job_status" value="offer">
+                    <label class="form-check-label" for="offer">Offer received</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="rejected" name="job_status" value="rejected">
+                    <label class="form-check-label" for="rejected">Rejected</label>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-custom">Add Job</button>
+        </form>
 
-        <label for="job_status">Current application status:</label>
-        <br>
-        <input type="radio" id="applied" name="job_status" value="applied">
-        <label for="applied">Applied</label>
-        <br>
-        <input type="radio" id="not_applied" name="job_status" value="not_applied">
-        <label for="not_applied">Not yet applied</label>
-        <br>
-        <input type="radio" id="assessments" name="job_status" value="assessments">
-        <label for="assessments">Assessments to do</label>
-        <br>
-        <input type="radio" id="offer" name="job_status" value="offer">
-        <label for="offer">Offer received</label>
-        <br>
-        <input type="radio" id="rejected" name="job_status" value="rejected">
-        <label for="rejected">Rejected</label>
-        <br><br>
-
-        <button type="submit">Add Job</button>
-    </form>
-    <br><br>
-    <form action="/view_jobs" method="get">
-        <button type="submit">View Jobs</button>
-    </form>
-    <form action="/export_jobs" method="get">
-        <button type="submit">Export Jobs to CSV</button>
-    </form>
+        <div class="mt-4">
+            <form action="/view_jobs" method="get" class="d-inline">
+                <button type="submit" class="btn btn-custom">View Jobs</button>
+            </form>
+            <form action="/export_jobs" method="get" class="d-inline ml-2">
+                <button type="submit" class="btn btn-custom">Export Jobs to CSV</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

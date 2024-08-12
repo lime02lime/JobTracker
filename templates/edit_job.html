@@ -4,62 +4,171 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Job Posting</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #007bff;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .form-column {
+            flex: 0 0 48%;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .btn-custom {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            text-align: center;
+            display: inline-block;
+            margin-top: 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+        .radio-group {
+            margin-bottom: 10px;
+        }
+        .radio-group label {
+            margin-right: 20px;
+        }
+        .radio-group input[type="radio"] {
+            margin-right: 5px;
+        }
+        .back-link {
+            margin-top: 20px;
+            display: block;
+        }
+    </style>
 </head>
 <body>
-    <h1>Edit Job Posting</h1>
-    <p>{{ job['Title'] }} at {{ job['Company'] }}</p>
-    <form action="/edit/{{ job['id'] }}" method="post">
-        <label for="title">Title:</label>
-        <input type="text" id="title" name="title" value="{{ job['Title'] }}"><br><br>
+    <div class="container">
+        <h1>Edit Job Posting</h1>
+        <p>{{ job['Title'] }} at {{ job['Company'] }}</p>
+        <form action="/edit/{{ job['id'] }}" method="post">
+            <div class="form-row">
+                <div class="form-column">
+                    <div class="form-group">
+                        <label for="title">Title:</label>
+                        <input type="text" id="title" name="title" value="{{ job['Title'] }}">
+                    </div>
 
-        <label for="company">Company:</label>
-        <input type="text" id="company" name="company" value="{{ job['Company'] }}"><br><br>
+                    <div class="form-group">
+                        <label for="company">Company:</label>
+                        <input type="text" id="company" name="company" value="{{ job['Company'] }}">
+                    </div>
 
-        <label for="location">Location:</label>
-        <input type="text" id="location" name="location" value="{{ job['Location'] }}"><br><br>
+                    <div class="form-group">
+                        <label for="location">Location:</label>
+                        <input type="text" id="location" name="location" value="{{ job['Location'] }}">
+                    </div>
 
-        <label for="responsibilities">Responsibilities:</label>
-        <textarea id="responsibilities" name="responsibilities" rows="4" cols="50" maxlength="15000">{{ job['Responsibilities'] }}</textarea><br><br>
+                    <div class="form-group">
+                        <label for="start_date">Start Date:</label>
+                        <input type="text" id="start_date" name="start_date" value="{{ job['Start_Date'] }}">
+                    </div>
 
-        <label for="company_summary">Company Summary:</label>
-        <textarea id="company_summary" name="company_summary" rows="4" cols="50" maxlength="15000">{{ job['Company_Summary'] }}</textarea><br><br>
+                    <div class="form-group">
+                        <label for="deadline">Deadline:</label>
+                        <input type="text" id="deadline" name="deadline" value="{{ job['Deadline'] }}">
+                    </div>
 
-        <label for="start_date">Start Date:</label>
-        <input type="text" id="start_date" name="start_date" value="{{ job['Start_Date'] }}"><br><br>
+                    <div class="form-group">
+                        <label for="posting_date">Posting Date:</label>
+                        <input type="text" id="posting_date" name="posting_date" value="{{ job['Posting_Date'] }}">
+                    </div>
 
-        <label for="deadline">Deadline:</label>
-        <input type="text" id="deadline" name="deadline" value="{{ job['Deadline'] }}"><br><br>
+                    <div class="form-group">
+                        <label for="url">URL:</label>
+                        <input type="text" id="url" name="url" value="{{ job['URL'] }}">
+                    </div>
+                </div>
 
-        <label for="posting_date">Posting Date:</label>
-        <input type="text" id="posting_date" name="posting_date" value="{{ job['Posting_Date'] }}"><br><br>
+                <div class="form-column">
+                    <div class="form-group">
+                        <label for="responsibilities">Responsibilities:</label>
+                        <textarea id="responsibilities" name="responsibilities" rows="4" maxlength="15000">{{ job['Responsibilities'] }}</textarea>
+                    </div>
 
-        <label for="url">URL:</label>
-        <input type="text" id="url" name="url" value="{{ job['URL'] }}"><br><br>
+                    <div class="form-group">
+                        <label for="company_summary">Company Summary:</label>
+                        <textarea id="company_summary" name="company_summary" rows="4" maxlength="15000">{{ job['Company_Summary'] }}</textarea>
+                    </div>
 
-        <label for="job_notes">Job notes:</label>
-        <input type="text" id="job_notes" name="job_notes" value="{{ job['Notes'] }}"><br><br>
+                    <div class="form-group">
+                        <label for="job_notes">Job notes:</label>
+                        <input type="text" id="job_notes" name="job_notes" value="{{ job['Notes'] }}">
+                    </div>
 
-        <label for="job_status">Current application status:</label>
-        <br>
-        <input type="radio" id="applied" name="job_status" value="applied" {% if job['Status'] == 'applied' %}checked{% endif %}>
-        <label for="applied">Applied</label>
-        <br>
-        <input type="radio" id="not_applied" name="job_status" value="not_applied" {% if job['Status'] == 'not_applied' %}checked{% endif %}>
-        <label for="not_applied">Not yet applied</label>
-        <br>
-        <input type="radio" id="assessments" name="job_status" value="assessments" {% if job['Status'] == 'assessments' %}checked{% endif %}>
-        <label for="assessments">Assessments to do</label>
-        <br>
-        <input type="radio" id="offer" name="job_status" value="offer" {% if job['Status'] == 'offer' %}checked{% endif %}>
-        <label for="offer">Offer received</label>
-        <br>
-        <input type="radio" id="rejected" name="job_status" value="rejected" {% if job['Status'] == 'rejected' %}checked{% endif %}>
-        <label for="rejected">Rejected</label>
-        <br><br>
+                    <div class="form-group">
+                        <label for="job_status">Current application status:</label>
+                        <div class="radio-group">
+                            <label>
+                                <input type="radio" id="applied" name="job_status" value="applied" {% if job['Status'] == 'applied' %}checked{% endif %}>
+                                Applied
+                            </label>
+                            <label>
+                                <input type="radio" id="not_applied" name="job_status" value="not_applied" {% if job['Status'] == 'not_applied' %}checked{% endif %}>
+                                Not yet applied
+                            </label>
+                            <label>
+                                <input type="radio" id="assessments" name="job_status" value="assessments" {% if job['Status'] == 'assessments' %}checked{% endif %}>
+                                Assessments to do
+                            </label>
+                            <label>
+                                <input type="radio" id="offer" name="job_status" value="offer" {% if job['Status'] == 'offer' %}checked{% endif %}>
+                                Offer received
+                            </label>
+                            <label>
+                                <input type="radio" id="rejected" name="job_status" value="rejected" {% if job['Status'] == 'rejected' %}checked{% endif %}>
+                                Rejected
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <button type="submit">Update Job</button>
-    </form>
-    <br></br>
-    <a href="/view_jobs">Back to Jobs List</a>
+            <button type="submit" class="btn-custom">Update Job</button>
+        </form>
+        <a href="/view_jobs" class="back-link">Back to Jobs List</a>
+    </div>
 </body>
 </html>

@@ -9,3 +9,5 @@ page_screenshot.png
 /venv/Lib
 /venv
 jobs.db
+__pycache__/scraper.cpython-39.pyc
+jobs_exported.xlsx

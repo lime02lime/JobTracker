@@ -4,56 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Deletion Confirmation</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
+            background-color: #f8f9fa;
+            color: #333;
+            padding: 20px;
         }
         h1 {
-            text-align: left;
-            padding: 20px;
-            background-color: #ffffff;
-            border-bottom: 1px solid #ddd;
-            margin: 0;
+            color: #007bff;
+            margin-bottom: 30px;
         }
         .container {
-            width: 100%;
-            max-width: 1200px;
+            max-width: 1800px;
             margin: 0 auto;
-            padding: 20px;
             background-color: #ffffff;
-            border: 1px solid #ddd;
+            padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .table {
+            table-layout: auto;
             margin-top: 20px;
         }
-        table, th, td {
-            border: 1px solid black;
+        .table td, .table th {
+            padding: 12px;
+            border: 1px solid #404040 !important;
+            word-break: break-word;
         }
-        th, td {
-            padding: 8px;
-            text-align: left;
-        }
-        th {
+        .table th {
             background-color: #f2f2f2;
         }
-        .narrow-column {
-            width: 150px; /* Adjust the width as needed */
-            word-break: break-all; /* Ensure long URLs break within the cell */
+        .col-type-1 {
+            min-width: 110px;
+            max-width: 150px;
         }
-        .summary {
-            min-width: 250px; /* Adjusted width for Company Summary column */
-            word-break: break-word;
+        .col-type-2 {
+            min-width: 200px;
+            max-width: 300px;
         }
-        .responsibilities {
-            min-width: 300px; /* Adjusted width for Responsibilities column */
-            word-break: break-word;
+        .col-type-3 {
+            min-width: 350px;
+            max-width: 500px;
+        }
+        .btn-custom {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 0.875rem;
+            text-align: center;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+        .mt-4 {
+            margin-top: 1.5rem;
         }
     </style>
 </head>
@@ -62,18 +71,18 @@
         <h1>Job Deleted</h1>
         <p>The job has been successfully deleted. Below are the details of the deleted job:</p>
         
-        <table>
+        <table class="table">
             <thead>
                 <tr>
-                    <th>Title</th>
-                    <th>Company</th>
-                    <th>Location</th>
-                    <th class="responsibilities">Responsibilities</th>
-                    <th class="summary">Company Summary</th>
-                    <th>Start Date</th>
-                    <th>Deadline</th>
-                    <th>Posting Date</th>
-                    <th class="narrow-column">URL</th>
+                    <th class="col-type-1">Title</th>
+                    <th class="col-type-1">Company</th>
+                    <th class="col-type-1">Location</th>
+                    <th class="col-type-3 responsibilities">Responsibilities</th>
+                    <th class="col-type-3 summary">Company Summary</th>
+                    <th class="col-type-1">Start Date</th>
+                    <th class="col-type-1">Deadline</th>
+                    <th class="col-type-1">Posting Date</th>
+                    <th class="col-type-2 narrow-column">URL</th>
                 </tr>
             </thead>
             <tbody>
@@ -90,7 +99,7 @@
                 </tr>
             </tbody>
         </table>
-        <a href="/view_jobs">Back to Job Listings</a>
+        <a href="/view_jobs" class="btn btn-custom mt-4">Back to Job Listings</a>
     </div>
 </body>
 </html>

@@ -13,9 +13,8 @@ def take_screenshot(url, screenshot_path):
     edge_options = EdgeOptions()
     edge_options.add_argument("--headless")  # Run headlessly
     edge_options.add_argument("--disable-gpu")
-    #edge_options.add_argument("--window-size=1920x1080")
 
-    service = EdgeService('C:\Program Files\edgedriver_win64\msedgedriver.exe')  # Replace with your path to edgedriver
+    service = EdgeService('C:\Program Files\edgedriver_win64\msedgedriver.exe')  # Replace with path to edgedriver
     driver = webdriver.Edge(service=service, options=edge_options)
 
     try:

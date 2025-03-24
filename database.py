@@ -30,6 +30,7 @@ def table_exists(cursor, table_name):
     result = cursor.fetchone()
     return result is not None
 
+# check if the submitted url exists in the database
 def url_exists_in_db(url):
     conn = sqlite3.connect('jobs.db')
     cursor = conn.cursor()
@@ -43,6 +44,7 @@ def url_exists_in_db(url):
     conn.close()
     return count > 0
 
+# function to export the database as an excel file
 def export_excel():
     # Connect to the database
     conn = sqlite3.connect('jobs.db')

@@ -7,9 +7,7 @@ from openai import OpenAI
 from groq import Groq
 
 import base64
-
 import os
-
 from screenshot import take_screenshot
 
 def scrape_url(url):
@@ -40,8 +38,8 @@ def scrape_url(url):
             info = return_info_with_gpt(page_text)
 
         #check if no responsibilities were found. The length also checked in case the responsibilities happens to contain the words "none" or "not found"
+        # this is done because some sites dont allow scraping
         if (not info["Responsibilities"]) or (len(info["Responsibilities"]) < 12):
-            #if ("None" in info["Responsibilities"] or "Not Found" in info["Responsibilities"]):
             print("none, encountered")
             take_screenshot(url, "page_screenshot.png")
             image = encode_image("page_screenshot.png")
@@ -171,6 +169,8 @@ def create_dict(response):
 
     return job_details
 
+
+# below are example texts for few-shot prompting of the LLMs.
 
 example_text1 = """
 2025 Full-Time Analyst Program - EMEA

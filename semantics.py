@@ -3,6 +3,11 @@ import sqlite3
 import json
 import numpy as np
 
+"""
+This code is to allow vector searching the database for relevant jbos that have been added.
+"""
+
+
 model = SentenceTransformer('all-MiniLM-L6-v2')
 
 def vectorize(id):
@@ -15,7 +20,6 @@ def vectorize(id):
 
     print(text)
     #create embedding model
-    #model = SentenceTransformer('all-MiniLM-L6-v2')
     embedding = model.encode(text)
     
     # Convert embedding to JSON string
